@@ -1,10 +1,29 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useId, useState } from "react";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const sheetId = useId();
+
+  // Lock scroll + close on Esc (only when open)
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    if (open) {
+      document.body.style.overflow = "hidden";
+      window.addEventListener("keydown", onKey);
+    } else {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    }
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
 
   return (
     <header
@@ -20,14 +39,14 @@ export function SiteHeader() {
       <div className="flex items-center justify-between px-5 py-3">
         {/* Brand / status */}
         <div className="flex items-center gap-2">
-         <span className="relative block h-5 w-5">
-          <Image
-            src="/logo.svg"
-            alt="Statbase"
-            fill
-            className="object-contain brightness-0 invert"
-          />
-         </span>
+          <span className="relative block h-5 w-5">
+            <Image
+              src="/logo.svg"
+              alt="Statbase"
+              fill
+              className="object-contain brightness-0 invert"
+            />
+          </span>
           <span className="font-semibold tracking-tight">Statbase</span>
           <span className="ml-2 rounded-sm border border-[var(--hud-line)] bg-[var(--panel-2)] px-2 py-0.5 mono text-[11px] text-[var(--hud-bright)]">
             BETA IS LIVE
@@ -52,6 +71,7 @@ export function SiteHeader() {
         <button
           aria-label="Open menu"
           aria-expanded={open}
+          aria-controls={sheetId}
           onClick={() => setOpen(true)}
           className="
             md:hidden inline-flex items-center justify-center
@@ -70,22 +90,25 @@ export function SiteHeader() {
       {/* Mobile sheet */}
       {open && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop (starts below TopTape, keeps blur) */}
           <button
             aria-label="Close menu"
             onClick={() => setOpen(false)}
-            className="fixed inset-0 z-40 bg-black/40 backdrop-blur-[2px] md:hidden"
+            className="fixed left-0 right-0 bottom-0 z-40 bg-black/45 backdrop-blur-[2px] md:hidden"
             style={{ top: "var(--tape-h, 40px)" }}
           />
 
           {/* Panel */}
           <div
+            id={sheetId}
+            role="dialog"
+            aria-modal="true"
             className="
               fixed right-0 z-50 h-[calc(100dvh-var(--tape-h,40px))]
               w-[86%] max-w-[360px]
               md:hidden
               border-l border-[color:var(--hud-grid)]
-              bg-[var(--panel)]
+              bg-[var(--panel)]/92 backdrop-blur-md
               shadow-[0_10px_40px_rgba(0,0,0,.5)]
               animate-[slideIn_.18s_ease-out]
             "
@@ -156,14 +179,8 @@ export function SiteHeader() {
       {/* tiny keyframe for the slide-in */}
       <style jsx global>{`
         @keyframes slideIn {
-          from {
-            transform: translateX(12%);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
-          }
+          from { transform: translateX(12%); opacity: 0; }
+          to   { transform: translateX(0);   opacity: 1; }
         }
       `}</style>
     </header>

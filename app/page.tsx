@@ -88,7 +88,7 @@ export default function Page() {
                 href="https://app.statbase.eu"
                 className="btn-wire mono text-[12px] uppercase tracking-wider inline-flex items-center justify-center"
               >
-                Launch the app
+                Unlock the app
               </Link>
               <a
                 href="#features"
