@@ -28,15 +28,28 @@ export function SiteHeader() {
   return (
     <header
       className="
-        sticky z-40
+        sticky z-40 relative              /* ← add relative */
         mx-auto w-full max-w-7xl
         border-x border-b border-[color:var(--hud-grid)]
-        bg-[var(--panel)]/80 backdrop-blur-sm
+        bg-transparent                    /* ← let overlay provide tint */
       "
-      // sit right under the TopTape (fallback 40px if var not present)
-      style={{ top: "var(--tape-h, 40px)" }}
+      style={{ top: "var(--tape-h, 40px)" }}  // sits under TopTape
     >
-      <div className="flex items-center justify-between px-5 py-3">
+      {/* ---- BLUR/TINT OVERLAY (fix for iOS sticky backdrop) ---- */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0"
+        style={{
+          // readable tint
+          background: "color-mix(in srgb, var(--panel) 78%, transparent)",
+          // actual blur (with webkit hint for iOS Safari)
+          backdropFilter: "saturate(160%) blur(8px)",
+          WebkitBackdropFilter: "saturate(160%) blur(8px)",
+        }}
+      />
+
+      {/* existing header bar content (unchanged), just ensure it's above the overlay */}
+      <div className="relative z-10 flex items-center justify-between px-5 py-3">
         {/* Brand / status */}
         <div className="flex items-center gap-2">
           <span className="relative block h-5 w-5">
@@ -80,17 +93,16 @@ export function SiteHeader() {
             bg-[color-mix(in_srgb,var(--panel-2)_60%,transparent)]
           "
         >
-          {/* burger */}
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
             <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
         </button>
       </div>
 
-      {/* Mobile sheet */}
+      {/* Mobile sheet (unchanged) */}
       {open && (
         <>
-          {/* Backdrop (full-bleed, below TopTape) */}
+          {/* Backdrop */}
           <button
             aria-label="Close menu"
             onClick={() => setOpen(false)}
@@ -101,11 +113,11 @@ export function SiteHeader() {
             "
             style={{
               top: "var(--tape-h, 40px)",
-              WebkitBackdropFilter: "blur(2px)", // iOS Safari hint
+              WebkitBackdropFilter: "blur(2px)",
             }}
           />
 
-          {/* Panel (anchored to right) */}
+          {/* Panel */}
           <div
             id={sheetId}
             role="dialog"
@@ -122,7 +134,7 @@ export function SiteHeader() {
             "
             style={{
               top: "var(--tape-h, 40px)",
-              WebkitBackdropFilter: "blur(8px)", // iOS Safari hint
+              WebkitBackdropFilter: "blur(8px)",
             }}
           >
             <div className="flex items-center justify-between px-5 py-3 border-b border-[color:var(--hud-grid)]">
@@ -176,10 +188,9 @@ export function SiteHeader() {
                 Contact
               </Link>
 
-              {/* status footer */}
               <div className="mt-6 flex items-center justify-between text-[var(--muted)]">
                 <span className="text-[11px]">EU OPS / PARIS NODE</span>
-                <span className="rounded-sm border border-[var(--hud-line)] bg-[var(--panel-2)] px-2 py-0.5 mono text-[11px] text-[var(--hud-bright)]">
+                <span className="rounded-sm border border-[var(--hud-line)] bg-[var(--panel-2)] px-2 py-0.5 mono text-[var(--hud-bright)]">
                   SYSTEM ONLINE
                 </span>
               </div>
@@ -187,7 +198,7 @@ export function SiteHeader() {
           </div>
         </>
       )}
-      {/* tiny keyframe for the slide-in */}
+
       <style jsx global>{`
         @keyframes slideIn {
           from { transform: translateX(12%); opacity: 0; }
