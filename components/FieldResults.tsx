@@ -40,11 +40,11 @@ export default function FieldResults({
         className="
           grid gap-10 sm:gap-12
           sm:grid-cols-3
-          text-center sm:text-left
+          text-left
         "
       >
         {items.map((item, i) => (
-          <div key={i} className="flex flex-col items-center sm:items-start">
+          <div key={i} className="flex flex-col items-start">
             {/* numeric index */}
             <span className="mono text-[11px] text-[var(--muted)] tracking-[.22em] mb-1">
               /{String(i + 1).padStart(2, "0")}
