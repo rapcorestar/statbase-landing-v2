@@ -1,0 +1,202 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Load ticker fonts */
+@import url("https://fonts.googleapis.com/css2?family=Doto:wght@400..700&display=swap");
+
+/* === HUD TOKENS === */
+:root{
+  --bg:#0a0f0c; --ink:#e6f2ea; --muted:#a9b7ad;
+  --panel:#0f1512; --panel-2:#101a15;
+  --hud-grid:rgba(88,140,110,.18);
+  --hud-line:rgba(126,205,160,.55);
+  --hud-bright:#7ecea0; --hud-accent:#4bd08a; --hud-amber:#ffc266;
+
+  /* ticker font variable (Doto → DotGothic16 → monospace fallbacks) */
+  --font-tape: "Doto","DotGothic16",ui-monospace,Menlo,Monaco,"Courier New",monospace;
+}
+
+html,body{background:var(--bg);color:var(--ink);}
+
+/* TYPE + UI */
+.mono{font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,"Courier New",monospace; letter-spacing:.02em;}
+
+/* TAPE (ticker) — Doto analog style */
+.tape{
+  background:#121915;
+  color:var(--muted);
+  border-bottom:1px solid rgba(126,205,160,.10);
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  font-size:.72rem;
+  font-family: var(--font-tape);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* scrolling content inside .tape */
+.tape .tape-track{
+  display:flex;
+  gap:3rem;
+  white-space:nowrap;
+  will-change: transform;
+  animation: tape-scroll 30s linear infinite;
+}
+@media (prefers-reduced-motion: reduce){
+  .tape .tape-track{ animation: none; }
+}
+
+.kicker{color:var(--muted);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;}
+
+/* Primary button (wired) — unified typography */
+.btn-wire{
+  @apply mono uppercase tracking-wider text-[12px] font-normal;
+  border:1.5px solid var(--hud-accent);
+  color:var(--hud-accent);
+  padding:.55rem .9rem;
+  border-radius:7px;
+  background:transparent;
+  transition:transform .12s,background .15s,box-shadow .15s,color .15s;
+  letter-spacing:.16em;
+}
+.btn-wire:hover{
+  background:color-mix(in srgb,var(--hud-accent) 14%,transparent);
+  transform:translateY(-1px);
+  box-shadow:0 0 0 3px rgba(21,185,129,.18);
+}
+
+/* LEFT PANEL */
+.hud-panel{position:relative;border:1px solid rgba(126,205,160,.10);
+  background:radial-gradient(120% 120% at 60% 0%,var(--panel-2) 0%,var(--panel) 60%,#0a0f0c 100%);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.35), 0 10px 40px rgba(0,0,0,.45);
+}
+.hud-panel::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.55;
+  background:
+    linear-gradient(transparent 31px,var(--hud-grid) 32px),
+    linear-gradient(90deg,transparent 31px,var(--hud-grid) 32px);
+  background-size:32px 32px;
+}
+
+/* HERO SPLIT */
+.hud-split{position:relative}
+.hud-rail{position:absolute;left:50%;top:0;bottom:0;width:1px;transform:translateX(-50%);
+  background: color-mix(in srgb, var(--hud-grid) 50%, transparent); display:none; opacity:.55;}
+@media (min-width:768px){ .hud-rail{display:block} }
+
+.hud-left-vignette{position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(110% 120% at 20% 10%, rgba(0,0,0,.35) 0%, transparent 55%),
+    linear-gradient(90deg, rgba(0,0,0,.40), transparent 35%);
+}
+
+/* HUD FRAME (single border; no inner white) */
+.hud-frame{position:relative;border-radius:14px;overflow:hidden;
+  border:1px solid color-mix(in srgb, var(--hud-grid) 85%, transparent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--panel-2) 80%, transparent), transparent);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.55), 0 14px 42px rgba(0,0,0,.35);
+}
+.hud-frame::after{ /* subtle backlight like old CRT */
+  content:"";position:absolute;inset:-20%;pointer-events:none;opacity:0;
+  background: radial-gradient(120% 90% at 70% 20%, rgba(75,208,138,.14), transparent 60%);
+  transition: opacity .25s ease;
+}
+.hud-frame:hover::after{opacity:1}
+
+/* GRID + CRT (single versions) */
+.hud-grid-bg{position:absolute;inset:0;pointer-events:none;opacity:.55;
+  background:
+    linear-gradient(transparent 31px, var(--hud-grid) 32px),
+    linear-gradient(90deg, transparent 31px, var(--hud-grid) 32px);
+  background-size:32px 32px;
+}
+.hud-crt{position:absolute;inset:0;pointer-events:none;
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,.04) 0 1px, transparent 1px 3px),
+    radial-gradient(120% 70% at 50% 10%, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 60%, rgba(0,0,0,.45) 100%);
+  mix-blend-mode: overlay;
+}
+
+/* MOTION PRIMITIVES */
+@keyframes dashGrow { from { stroke-dasharray: 0 420; } to { stroke-dasharray: 420 0; } }
+@keyframes blip { 0%{ transform:scale(.2); opacity:.0 } 40%{ transform:scale(1); opacity:1 } 100%{ transform:scale(1); opacity:.7 } }
+@keyframes sweep { from{ transform:rotate(0deg) } to{ transform:rotate(360deg) } }
+
+.hud-throw { stroke-dasharray: 0 420; animation: dashGrow 720ms ease forwards; }
+.hud-blip  { transform-origin: center; animation: blip 540ms ease both; }
+.hud-sweep { transform-origin: 400px 400px; animation: sweep 14s linear infinite; }
+
+/* Rails text */
+.hud-rail-label{ font-size:10px; letter-spacing:.22em; text-transform:uppercase; fill:var(--hud-bright); opacity:.55; }
+
+/* =======================================================================
+   HUD OVERLAY FIXES — stops garbled text caused by compositing/blending
+   ======================================================================= */
+.hud-grid-bg, .hud-crt, .hud-frame::after { z-index: 0; }
+.hud-frame > * { position: relative; z-index: 1; }
+
+.hud-overlay{
+  position: relative;
+  z-index: 2;
+  mix-blend-mode: normal !important;
+  isolation: isolate;
+  transform: translateZ(0);
+  will-change: transform;
+  filter: none !important;
+  -webkit-backface-visibility: hidden;
+}
+
+.hud-overlay .mono,
+.hud-overlay pre,
+.hud-overlay text{
+  letter-spacing: 0 !important;
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "calt" 0, "kern" 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+.hud-safe .hud-crt,
+.hud-safe .hud-frame::after{
+  mix-blend-mode: normal !important;
+  opacity:.45;
+}
+
+/* === SVG HUD hardening === */
+.hud-svg{
+  isolation:isolate;
+  contain:paint;
+  transform:translateZ(0);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:geometricPrecision;
+}
+.hud-text,
+.hud-text text,
+.hud-text tspan{
+  font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,"Courier New",monospace !important;
+  font-variant-ligatures: none !important;
+  font-feature-settings: "liga" 0, "calt" 0, "kern" 1 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  -webkit-text-size-adjust: 100%;
+}
+.hud-text rect{ shape-rendering:crispEdges; }
+
+/* ===== TopTape: precise marquee (global) ===== */
+@keyframes tape-marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(calc(-1 * var(--loop-w)), 0, 0); }
+}
+
+/* Animate the track only when --tape-speed is present */
+.tape .tape-track[style*="--tape-speed"] {
+  animation: tape-marquee var(--tape-speed) linear infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tape .tape-track[style*="--tape-speed"] {
+    animation: none !important;
+    transform: translate3d(0, 0, 0) !important;
+  }
+}

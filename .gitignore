@@ -1,0 +1,21 @@
+# dependencies
+node_modules/
+.pnp.*
+# next.js
+.next/
+out/
+.vercel/
+.turbo/
+# builds
+dist/
+build/
+# env & logs
+.env*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+# editor/OS
+.DS_Store
+.idea/
+.vscode/
