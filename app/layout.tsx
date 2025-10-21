@@ -5,8 +5,8 @@ import type { Metadata } from "next"
 import { Newsreader, IBM_Plex_Mono } from "next/font/google";
 
 import CookieConsent from "../components/CookieConsent";
-// import { Analytics } from "@vercel/analytics/react"
-// import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/react"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const siteUrl = "https://www.statbase.eu"
 const ogImage = "/og.jpg"
@@ -126,8 +126,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${display.variable} ${mono.variable} font-sans`}>
         {children}
         <CookieConsent /> {/* 👈 appears site-wide */}
-        {/* <Analytics />
-        <SpeedInsights /> */}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
