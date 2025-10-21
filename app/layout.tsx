@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   },
   description:
     "Statbase is the most comprehensive European pre-analyzed insights database — powering verified stats, Player Value Index (PVI), Team Power Metric (TPM), and AI Scout Insights for Serie A, DBL, and beyond.",
-  manifest: "/manifest.json", // ✅ add this line
+  manifest: "/manifest.json",
     openGraph: {
     type: "website",
     url: "https://www.statbase.eu",

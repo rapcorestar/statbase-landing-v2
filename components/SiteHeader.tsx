@@ -52,15 +52,22 @@ export function SiteHeader() {
       <div className="relative z-10 flex items-center justify-between px-5 py-3">
         {/* Brand / status */}
         <div className="flex items-center gap-2">
-          <span className="relative block h-5 w-5">
-            <Image
-              src="/logo.svg"
-              alt="Statbase"
-              fill
-              className="object-contain brightness-0 invert"
-            />
-          </span>
-          <span className="font-semibold tracking-tight">Statbase</span>
+          <Link
+            href="/"
+            className="flex items-center gap-2 rounded-[4px] outline-none focus-visible:ring-2 focus-visible:ring-[var(--hud-bright)]/40"
+            aria-label="Go to Statbase home"
+          >
+            <span className="relative block h-5 w-5">
+              <Image
+                src="/logo.svg"
+                alt="Statbase"
+                fill
+                className="object-contain brightness-0 invert"
+              />
+            </span>
+            <span className="font-semibold tracking-tight">Statbase</span>
+          </Link>
+
           <span className="ml-2 rounded-sm border border-[var(--hud-line)] bg-[var(--panel-2)] px-2 py-0.5 mono text-[11px] text-[var(--hud-bright)]">
             BETA IS LIVE
           </span>

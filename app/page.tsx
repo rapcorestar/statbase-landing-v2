@@ -256,7 +256,7 @@ export default function Page() {
                   <span className="text-sm font-semibold">Statbase</span>
                 </div>
                 <div className="mono text-[12px] text-[var(--muted)]">
-                  © {new Date().getFullYear()} Statbase / Division of BUSEEDO SAS
+                  © {new Date().getFullYear()} Statbase / BUSEEDO SAS
                 </div>
               </div>
             </footer>

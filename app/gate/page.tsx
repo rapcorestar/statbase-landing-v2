@@ -71,7 +71,11 @@ export default function GatePage() {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3">
           <div className="flex items-center gap-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.svg" alt="Statbase" className="h-7 w-7" />
+            <img
+              src="/logo.svg"
+              alt="Statbase"
+              className="h-5 w-5 object-contain brightness-0 invert" // 👈 makes it white
+            />
             <span className="font-semibold tracking-tight">Statbase</span>
             <span className="ml-2 rounded-sm border border-[var(--hud-line)] bg-[var(--panel-2)] px-2 py-[2px] mono text-[11px] text-[var(--hud-bright)]">
               PRIVATE PREVIEW
