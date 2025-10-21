@@ -90,21 +90,29 @@ export function SiteHeader() {
       {/* Mobile sheet */}
       {open && (
         <>
-          {/* Backdrop (starts below TopTape, keeps blur) */}
+          {/* Backdrop (full-bleed, below TopTape) */}
           <button
             aria-label="Close menu"
             onClick={() => setOpen(false)}
-            className="fixed left-0 right-0 bottom-0 z-40 bg-black/45 backdrop-blur-[2px] md:hidden"
-            style={{ top: "var(--tape-h, 40px)" }}
+            className="
+              fixed left-0 right-0 bottom-0
+              z-[100] bg-black/55 md:hidden
+              backdrop-blur-[2px]
+            "
+            style={{
+              top: "var(--tape-h, 40px)",
+              WebkitBackdropFilter: "blur(2px)", // iOS Safari hint
+            }}
           />
 
-          {/* Panel */}
+          {/* Panel (anchored to right) */}
           <div
             id={sheetId}
             role="dialog"
             aria-modal="true"
             className="
-              fixed right-0 z-50 h-[calc(100dvh-var(--tape-h,40px))]
+              fixed right-0
+              z-[110] h-[calc(100dvh-var(--tape-h,40px))]
               w-[86%] max-w-[360px]
               md:hidden
               border-l border-[color:var(--hud-grid)]
@@ -112,7 +120,10 @@ export function SiteHeader() {
               shadow-[0_10px_40px_rgba(0,0,0,.5)]
               animate-[slideIn_.18s_ease-out]
             "
-            style={{ top: "var(--tape-h, 40px)" }}
+            style={{
+              top: "var(--tape-h, 40px)",
+              WebkitBackdropFilter: "blur(8px)", // iOS Safari hint
+            }}
           >
             <div className="flex items-center justify-between px-5 py-3 border-b border-[color:var(--hud-grid)]">
               <span className="mono text-[11px] tracking-[.22em] text-[var(--muted)]">/MENU</span>
